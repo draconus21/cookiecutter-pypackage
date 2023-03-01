@@ -63,7 +63,7 @@ Ready to contribute? Here's how to set up `{{ cookiecutter.project_slug }}` for 
 #. Then go into the issue and create a merge request from it. This will automates a few things.
     * creates a new branch with the issue number and title
     * adds the issue link to the MR description
-    * automatallically closes the issue with the MR is closed/completed.
+    * automatallically closes the issue with the MR is merged.
 
 #. Clone the repo locally::
 
