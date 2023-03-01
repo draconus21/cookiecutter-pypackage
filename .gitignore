@@ -32,6 +32,7 @@ Temporary Items
 
 # Distribution / packaging
 .Python
+.env/
 env/
 venv/
 build/
@@ -67,7 +68,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
-*,cover
+*.cover
 .hypothesis/
 .pytest_cache/
 
@@ -100,3 +101,22 @@ cookiecutter-pypackage-env/
 
 # IDE settings
 .vscode/
+.idea/
+.code-workspace
+
+# vim swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+
+# vim session
+Session.vim
+
+# vim temporary
+.netrwhist
+.undodir/
+*~
+
+# vim auto-generated tag files
+.tags
