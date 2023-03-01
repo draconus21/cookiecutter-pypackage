@@ -1,5 +1,3 @@
-[comment]: # Default templates defined in .md are not used across all Gitlab functionalities - please define your default templates in the repo's General Settings instead.
-
 # Work to be done
 
 * [ ] item 1 ...
