@@ -112,6 +112,9 @@ Before you mark a merge request as ready, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
 3. The merge request should work for Python 3.5, 3.6, 3.7 and 3.8, and for PyPy. Check
+{% if cookiecutter.use_pypi_deployment_with_travis== 'y' %}
+   https://travis-ci.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/pull_requests
+{% endif %}
    and make sure that the tests pass for all supported Python versions.
 
 Tips
