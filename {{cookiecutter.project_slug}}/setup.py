@@ -56,7 +56,7 @@ setup(
     name='{{ cookiecutter.project_slug }}',
     packages=find_packages(include=['{{ cookiecutter.project_slug }}', '{{ cookiecutter.project_slug }}.*']),
     test_suite='tests',
-    tests_require=test_requirements,
+    tests_require=requirements_test,
     url='https://gitlab.com/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}',
     version='{{ cookiecutter.version }}',
     zip_safe=False,
