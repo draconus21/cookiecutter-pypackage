@@ -4,11 +4,15 @@
 {% for _ in cookiecutter.project_name %}={% endfor %}
 
 {% if is_open_source %}
+{%- if cookiecutter.add_pypi_badge== 'y' -%}
 .. image:: https://img.shields.io/pypi/v/{{ cookiecutter.project_slug }}.svg
         :target: https://pypi.python.org/pypi/{{ cookiecutter.project_slug }}
+{% endif %}
 
-.. image:: https://img.shields.io/travis/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}.svg
-        :target: https://travis-ci.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}
+{%- if cookiecutter.use_pypi_deployment_with_travis== 'y' -%}
+.. image:: https://img.shields.io/travis/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}.svg
+        :target: https://travis-ci.com/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}
+{% endif %}
 
 .. image:: https://readthedocs.org/projects/{{ cookiecutter.project_slug | replace("_", "-") }}/badge/?version=latest
         :target: https://{{ cookiecutter.project_slug | replace("_", "-") }}.readthedocs.io/en/latest/?version=latest
@@ -16,8 +20,8 @@
 {%- endif %}
 
 {% if cookiecutter.add_pyup_badge == 'y' %}
-.. image:: https://pyup.io/repos/github/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/shield.svg
-     :target: https://pyup.io/repos/github/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/
+.. image:: https://pyup.io/repos/gitlab/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}/shield.svg
+     :target: https://pyup.io/repos/gitlab/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}/
      :alt: Updates
 {% endif %}
 

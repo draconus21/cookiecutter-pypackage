@@ -1,0 +1,4 @@
+pip
+wheel
+{% if cookiecutter.command_line_interface|lower == 'click' -%}
+Click{% endif %}
