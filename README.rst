@@ -20,13 +20,17 @@ Cookiecutter_ template for a Python package.
 * Documentation: https://cookiecutter-pypackage.readthedocs.io/
 * Free software: BSD license
 
-Features/Difference from `audreyfeldroy`'s version
+This repo is a fork of https://github.com/Andesha/cookiecutter-pypackage
+
+Features/Difference from `Andesha`'s version
 --------------------------------------------------
 * Use gitlab instead of Github.
 * Update Contribute workflow to use Gitlab Issues, Merge Requests, and `rebase`.
 * Gitlab issue and merge request templates
 * include travis related info (`.travis.yml`, information in readme, contributions, etc) only when `use_pypi_deployment_with_travis` is set to `y` when configuring.
 * Tweaks to coookiecutter.json
+* add requirements, requirements_dev, and requirements_test for repo you will create
+* removed versions specified in the requirements for the repo you will create
 
 Features
 --------
