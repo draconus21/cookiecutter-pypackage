@@ -4,12 +4,12 @@
 {% for _ in cookiecutter.project_name %}={% endfor %}
 
 {% if is_open_source %}
-{% if cookiecutter.add_pypi_badge== 'y' %}
+{%- if cookiecutter.add_pypi_badge== 'y' -%}
 .. image:: https://img.shields.io/pypi/v/{{ cookiecutter.project_slug }}.svg
         :target: https://pypi.python.org/pypi/{{ cookiecutter.project_slug }}
 {% endif %}
 
-{% if cookiecutter.use_pypi_deployment_with_travis== 'y' %}
+{%- if cookiecutter.use_pypi_deployment_with_travis== 'y' -%}
 .. image:: https://img.shields.io/travis/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}.svg
         :target: https://travis-ci.com/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}
 {% endif %}
