@@ -29,8 +29,7 @@ Features/Difference from `Andesha`'s version
 * Gitlab issue and merge request templates
 * include travis related info (`.travis.yml`, information in readme, contributions, etc) only when `use_pypi_deployment_with_travis` is set to `y` when configuring.
 * Tweaks to coookiecutter.json
-* add requirements, requirements_dev, and requirements_test for repo you will create
-* removed versions specified in the requirements for the repo you will create
+* configure package fully using `pyproject.toml`
 
 Features
 --------
