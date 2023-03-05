@@ -1,4 +1,4 @@
-* {{ cookiecutter.project_name }} version:
+* Cookiecutter Pypackage version:
 * Python version:
 * Operating System:
 
