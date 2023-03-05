@@ -1,8 +1,82 @@
+{%- set license_classifiers = {
+    'MIT license': 'License :: OSI Approved :: MIT License',
+    'BSD license': 'License :: OSI Approved :: BSD License',
+    'ISC license': 'License :: OSI Approved :: ISC License (ISCL)',
+    'Apache Software License 2.0': 'License :: OSI Approved :: Apache Software License',
+    'GNU General Public License v3': 'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
+} %}
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+classifiers=[
+        "Development Status :: 2 - Pre-Alpha",
+        "Intended Audience :: Developers",
+{%- if cookiecutter.open_source_license in license_classifiers %}
+        "{{ license_classifiers[cookiecutter.open_source_license] }}",
+{%- endif %}
+        "Natural Language :: English",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+    ]
+
+{%- if cookiecutter.open_source_license in license_classifiers %}
+
+{%- endif %}
+name = "{{ cookiecutter.project_slug }}"
+authors = [{ name = "{{ cookiecutter.full_name.replace('\"', '\\\"') }}", email = "{{ cookiecutter.email }}" }]
+description = "{{ cookiecutter.project_short_description }}"
+{%- if cookiecutter.open_source_license in license_classifiers %}
+license={ text="{{ cookiecutter.open_source_license }}" }
+{%- endif %}
+keywords = ["{{ cookiecutter.project_slug }}"]
+dependencies = [
+{%- if cookiecutter.command_line_interface|lower == "click" -%}
+"click"{%- endif -%}
+]
+requires-python = ">=3.7"
+dynamic = ["version", "readme"]
+
+[project.optional-dependencies]
+dev = ["black", "build", "tox", "coverage", "Sphinx", "twine"
+{%- if cookiecutter.command_line_interface|lower == "click" -%}
+, "click"{%- endif -%}
+{%- if cookiecutter.use_pytest == "y" -%}
+, "pytest"{%- endif -%}
+{%- if cookiecutter.use_black == "y" -%}
+, "black"{%- endif -%}
+]
+test = ["tox", "coverage", "Sphinx", "twine"
+{%- if cookiecutter.command_line_interface|lower == "click" -%}
+, "click"{%- endif -%}
+{%- if cookiecutter.use_pytest == "y" -%}
+, "pytest"{%- endif -%}
+{%- if cookiecutter.use_black == "y" -%}
+, "black"{%- endif -%}
+]
+[project.scripts]
+{{ cookiecutter.project_slug }} = "{{ cookiecutter.project_slug }}.cli:main"
+
+[project.urls]
+repository = "https://gitlab.com/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}"
+changelog =  "https://gitlab.com/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}/blob/master/CHANGELOG.md"
+
+[tool.setuptools.dynamic]
+version = { attr = "{{ cookiecutter.project_slug }}.__version__" }
+readme = { file = ["README.rst", "CONTRIIBUTING.rst", "HISTORY.rst"] }
+
+{% if cookiecutter.use_pytest == 'y' -%}
+[tool.pytest]
+collect_ignore = ["setup.py"]
+{%- endif %}
+
+{% if cookiecutter.use_black == "y" -%}
 [tool.black]
 line-length = 120
-ignore = 'E501'
-include = '\.pyi?$'
-exclude = '''
+ignore = "E501"
+extend-exclude = '''
 (
   /(
       \.eggs         # exclude a few common directories in the
@@ -18,3 +92,4 @@ exclude = '''
   )/
 )
 '''
+{% endif -%}
