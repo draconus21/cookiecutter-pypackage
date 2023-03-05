@@ -24,6 +24,7 @@ classifiers=[
 {%- if cookiecutter.open_source_license in license_classifiers %}
 
 {%- endif %}
+version = {{ cookiecutter.version }}
 name = "{{ cookiecutter.project_slug }}"
 authors = [{ name = "{{ cookiecutter.full_name.replace('\"', '\\\"') }}", email = "{{ cookiecutter.email }}" }]
 description = "{{ cookiecutter.project_short_description }}"
@@ -36,7 +37,7 @@ dependencies = [
 "click"{%- endif -%}
 ]
 requires-python = ">=3.7"
-dynamic = ["version", "readme"]
+dynamic = ["readme"]
 
 [project.optional-dependencies]
 dev = ["black", "build", "tox", "coverage", "Sphinx", "twine"
@@ -64,7 +65,6 @@ repository = "https://gitlab.com/{{ cookiecutter.gitlab_username }}/{{ cookiecut
 changelog =  "https://gitlab.com/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}/blob/master/CHANGELOG.md"
 
 [tool.setuptools.dynamic]
-version = { attr = "{{ cookiecutter.project_slug }}.__version__" }
 readme = { file = ["README.rst", "CONTRIIBUTING.rst", "HISTORY.rst"] }
 
 {% if cookiecutter.use_pytest == 'y' -%}
