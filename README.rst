@@ -26,10 +26,10 @@ Features/Difference from `Andesha`'s version
 --------------------------------------------------
 * Use gitlab instead of Github.
 * Update Contribute workflow to use Gitlab Issues, Merge Requests, and `rebase`.
-* Gitlab issue and merge request templates
-* include travis related info (`.travis.yml`, information in readme, contributions, etc) only when `use_pypi_deployment_with_travis` is set to `y` when configuring.
-* Tweaks to coookiecutter.json
-* configure package fully using `pyproject.toml`
+* Gitlab issue and merge request templates.
+* Include travis related info (`.travis.yml`, information in readme, contributions, etc) only when `use_pypi_deployment_with_travis` is set to `y` when configuring.
+* Tweaks to coookiecutter.json.
+* Configure package fully using `pyproject.toml`.
 
 Features
 --------
