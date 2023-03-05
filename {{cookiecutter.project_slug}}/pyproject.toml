@@ -9,22 +9,8 @@
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
-classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
-        "Intended Audience :: Developers",
-{%- if cookiecutter.open_source_license in license_classifiers %}
-        "{{ license_classifiers[cookiecutter.open_source_license] }}",
-{%- endif %}
-        "Natural Language :: English",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-    ]
-
-{%- if cookiecutter.open_source_license in license_classifiers %}
-
-{%- endif %}
+version = "{{ cookiecutter.version }}"
 name = "{{ cookiecutter.project_slug }}"
 authors = [{ name = "{{ cookiecutter.full_name.replace('\"', '\\\"') }}", email = "{{ cookiecutter.email }}" }]
 description = "{{ cookiecutter.project_short_description }}"
@@ -37,7 +23,17 @@ dependencies = [
 "click"{%- endif -%}
 ]
 requires-python = ">=3.7"
-dynamic = ["version", "readme"]
+dynamic = ["readme"]
+classifiers=[
+        "Development Status :: 2 - Pre-Alpha",
+        "Intended Audience :: Developers",
+{%- if cookiecutter.open_source_license in license_classifiers %}
+        "{{ license_classifiers[cookiecutter.open_source_license] }}",
+{%- endif %}
+        "Natural Language :: English",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+    ]
 
 [project.optional-dependencies]
 dev = ["black", "build", "tox", "coverage", "Sphinx", "twine"
@@ -56,6 +52,7 @@ test = ["tox", "coverage", "Sphinx", "twine"
 {%- if cookiecutter.use_black == "y" -%}
 , "black"{%- endif -%}
 ]
+
 [project.scripts]
 {{ cookiecutter.project_slug }} = "{{ cookiecutter.project_slug }}.cli:main"
 
@@ -63,16 +60,18 @@ test = ["tox", "coverage", "Sphinx", "twine"
 repository = "https://gitlab.com/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}"
 changelog =  "https://gitlab.com/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}/blob/master/CHANGELOG.md"
 
-[tool.setuptools.dynamic]
-version = { attr = "{{ cookiecutter.project_slug }}.__version__" }
-readme = { file = ["README.rst", "CONTRIIBUTING.rst", "HISTORY.rst"] }
+[tool.setuptools]
+package-dir = { "" = "{{ cookiecutter.project_slug}}"}
 
-{% if cookiecutter.use_pytest == 'y' -%}
+[tool.setuptools.dynamic]
+readme = { file = ["README.rst", "CONTRIIBUTING.rst", "HISTORY.rst"] }
+{%- if cookiecutter.use_pytest == 'y' %}
+
 [tool.pytest]
 collect_ignore = ["setup.py"]
 {%- endif %}
+{%- if cookiecutter.use_black == "y" %}
 
-{% if cookiecutter.use_black == "y" -%}
 [tool.black]
 line-length = 120
 ignore = "E501"
