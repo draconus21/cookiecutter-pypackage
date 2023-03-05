@@ -9,7 +9,6 @@
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
 classifiers=[
         "Development Status :: 2 - Pre-Alpha",
@@ -56,6 +55,7 @@ test = ["tox", "coverage", "Sphinx", "twine"
 {%- if cookiecutter.use_black == "y" -%}
 , "black"{%- endif -%}
 ]
+
 [project.scripts]
 {{ cookiecutter.project_slug }} = "{{ cookiecutter.project_slug }}.cli:main"
 
