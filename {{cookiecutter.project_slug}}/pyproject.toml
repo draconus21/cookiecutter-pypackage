@@ -64,6 +64,9 @@ test = ["tox", "coverage", "Sphinx", "twine"
 repository = "https://gitlab.com/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}"
 changelog =  "https://gitlab.com/{{ cookiecutter.gitlab_username }}/{{ cookiecutter.project_slug }}/blob/master/CHANGELOG.md"
 
+[tool.setuptools]
+package-dir = { "" = "{{ cookiecutter.project_slug}}"}
+
 [tool.setuptools.dynamic]
 readme = { file = ["README.rst", "CONTRIIBUTING.rst", "HISTORY.rst"] }
 
