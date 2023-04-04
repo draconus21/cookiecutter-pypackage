@@ -10,6 +10,7 @@
   "version": "0.1.0",
   "use_pytest": "n",
   "use_black": "y",
+  "with_utils": "y",
   "use_pypi_deployment_with_travis": "n",
   "add_pypi_badge": "n",
   "add_pyup_badge": "n",

@@ -30,6 +30,8 @@ Features/Difference from `Andesha`'s version
 * Include travis related info (`.travis.yml`, information in readme, contributions, etc) only when `use_pypi_deployment_with_travis` is set to `y` when configuring.
 * Tweaks to coookiecutter.json.
 * Configure package fully using `pyproject.toml`.
+* Automatically generate basic scripts.
+* Add option for `utils` to get started with (logging, visualization, and so on).
 
 Features
 --------
