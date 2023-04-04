@@ -1,5 +1,6 @@
 # Work to be done
 
+* [ ] update readme
 * [ ] item 1 ...
 * [ ] item 2 ...
 
@@ -11,7 +12,7 @@
 
 * [ ] start with a WIP merge request
 * [ ] update readme and doc
-* [ ] adapt / add tests 
+* [ ] adapt / add tests
 * [ ] rebase on target branch
 * [ ] add issue links
 * [ ] all affected pipelines

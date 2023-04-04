@@ -46,3 +46,7 @@ if __name__ == "__main__":
 
     if "{{ cookiecutter.use_pypi_deployment_with_travis}}" != "y":
         remove_file(".travis.yml")
+
+    if "{{ cookiecutter.with_utils}}" != "y":
+        utils_dir = os.path.join("{{ cookiecutter.project_slug }}", "utils")
+        remove_dir(utils_dir)
