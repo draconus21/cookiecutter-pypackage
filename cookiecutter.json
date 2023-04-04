@@ -4,6 +4,7 @@
   "gitlab_username": "draconus21",
   "project_name": "Python Boilerplate",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "project_acronym": "NXK",
   "project_short_description": "Python Boilerplate contains all the boilerplate you need to create a Python package.",
   "pypi_username": "{{ cookiecutter.gitlab_username }}",
   "version": "0.1.0",
