@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from functools import partial
 from matplotlib.widgets import Slider
 
+from {{ cookiecutter.project_slug }}.utils import misc
 
 def _saveFig(
     fig,
