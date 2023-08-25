@@ -25,14 +25,14 @@ This repo is a fork of https://github.com/Andesha/cookiecutter-pypackage
 Features/Difference from `Andesha`'s version
 --------------------------------------------------
 * Use GitLab instead of Github.
-* Update `contribute` workflow to use Gitlab Issues, Merge Requests, and `rebase`.
+* Update ``CONTRIBUTING`` workflow to use Gitlab Issues, Merge Requests, and ``rebase``.
 * GitLab issue and merge request templates.
-* Toggle travis related info (`.travis.yml`, information in readme, contributions, etc).
+* Toggle travis related info (``.travis.yml``, information in readme, contributions, etc).
 * Tweaks to coookiecutter.json.
-* Configure package fully using `pyproject.toml`.
+* Configure package fully using ``pyproject.toml``.
 * Automatically generate basic scripts.
 * .gitattributes to handle line-endings and git-lfs
-* Option for `utils` to get started with (logging, visualization, and so on).
+* Option for ``utils`` to get started with (logging, visualization, and so on).
 
 Features
 --------
