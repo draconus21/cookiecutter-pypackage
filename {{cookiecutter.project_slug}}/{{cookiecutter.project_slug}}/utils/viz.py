@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 from functools import partial
 from matplotlib.widgets import Slider
+from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
 from {{ cookiecutter.project_slug }}.utils import misc
 
@@ -103,16 +104,27 @@ def legend(ax):
             a.legend()
 
 
-def matshow(ax, mat, title=None, cbar=True, **kwargs):
+def matshow(ax=None, mat=None, title=None, cbar=True, **kwargs):
+    if mat is None:
+        logging.debug(f"no mat provided")
+        return
+    if ax is None:
+        suptitle = kwargs.pop("suptitle", f"fig for {title}")
+        _, ax = subplots(1, 1, title=suptitle)
+        ax = ax.ravel()[0]
+
     vmin = kwargs.get("vmin", None)
     vmax = kwargs.get("vmax", None)
     cmap = kwargs.get("cmap", "gray")
     mBlur = kwargs.pop("mBlur", True)
+    show_axis = kwargs.pop("show_axis", True)
 
     # set nans to black for seismic cmap
     if cmap == "seismic":
         nancolor = kwargs.pop("nan_color", "black")
-        cm.get_cmap(cmap).set_bad(color=nancolor)
+        cmap_obj = cm.get_cmap(cmap).copy()
+        cmap_obj.set_bad(color=nancolor)
+        kwargs["cmap"] = cmap_obj
 
     # auto colormap ranges for cmaps
     if vmin is None or vmax is None:
@@ -150,9 +162,15 @@ def matshow(ax, mat, title=None, cbar=True, **kwargs):
         t = ax.images[0]
         # if cbar is not displayed, show it
         if ax.images[0].colorbar is None:
-            ax.get_figure().colorbar(t, ax=ax)
+            ax_div = make_axes_locatable(ax)
+            # add an axis to the right of main axis
+            cax = ax_div.append_axes("right", size="7%", pad="2%")
+            ax.get_figure().colorbar(t, cax=cax)
         else:  # otherwise update it
             t.set_clim([kwargs["vmin"], kwargs["vmax"]])
+
+    if not show_axis:
+        ax.axis("off")
 
 
 def show(*args, **kwargs):
@@ -167,7 +185,7 @@ def close(*args, **kwargs):
     plt.close(*args, **kwargs)
 
 
-def subplots_n(n, aspect_ratio=1, **kwargs):
+def subplots_n(n, aspect_ratio=1, title=None, **kwargs):
     """
     create n subplots while trying to respect the aspect ratio
     aspect ratio := nr/nc
@@ -177,7 +195,6 @@ def subplots_n(n, aspect_ratio=1, **kwargs):
     nc = int(nc)
     nr = int(nr)
 
-    title = kwargs.pop("title", None)
     rows_and_cols = lambda a: None if kwargs.get(a, None) is None else not kwargs.pop(a, False)
     odd_rows = rows_and_cols("even_rows")
     odd_cols = rows_and_cols("even_cols")
@@ -225,17 +242,19 @@ def subplots(nrows, ncols, title=None, **kwargs):
     return fig, ax
 
 
-def quickmatshow(mats: list, **kwargs):
+def quickmatshow(mats: list, aspect_ratio=1, title=None, **kwargs):
     """
     matshow all mats in list
     """
-    cmap = kwargs.get("cmap", "gray")
+    # remove cmap to avoid conflict with subplots
+    cmap = kwargs.pop("cmap", "gray")
 
     n = len(mats)
-    fig, axList, nr, nc = subplots_n(n, **kwargs)
+    fig, axList, nr, nc = subplots_n(n, aspect_ratio=aspect_ratio, title=title)
     # to avoid conflict with axis title
     kwargs.pop("title", None)
 
+    # add cmap back for matshow
     kwargs["cmap"] = cmap
     for i, mat in enumerate(mats):
         ax = axList[i // nc, i % nc]
