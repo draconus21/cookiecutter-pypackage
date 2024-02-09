@@ -22,7 +22,7 @@ Cookiecutter_ template for a Python package.
 
 This repo is a fork of https://github.com/Andesha/cookiecutter-pypackage
 
-Features/Difference from `Andesha`'s version
+Extra Features/Difference from `Andesha`'s version
 --------------------------------------------------
 * Use GitLab instead of Github.
 * Update ``CONTRIBUTING`` workflow to use Gitlab Issues, Merge Requests, and ``rebase``.

@@ -1,10 +1,18 @@
 {% raw  -%}
 #! /bin/bash
+{%- endraw %}
 
+ABOUT_SCRIPT="
+{{ cookiecutter.project_name }}: {{ cookiecutter.project_short_description}}.
 
-# -o prevent errors from being masked
-# -u require vars to be declared before referencing them
-set -o pipefail
+Setup dev environment for {{ cookiecutter.project_name }}.
+Make sure to run this script in each terminal you want to develop with {{ cookiecutter.project_name }}."
+
+{%- raw %}
+
+# ------------------------------------------------------------------- #
+#                          TERMINAL COLORS                            #
+# ------------------------------------------------------------------- #
 
 normal=$(tput sgr0)
 bg_normal=$(tput setab sgr0)
@@ -14,43 +22,20 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 cyan=$(tput setaf 6)
 
-function green () {
-    echo -e ${green}$1${normal}
+function green() {
+  echo -e ${green}$1${normal}
 }
 
-function red () {
-    echo -e ${red}$1${normal}
+function red() {
+  echo -e ${red}$1${normal}
 }
 
-function yellow () {
-    echo -e ${yellow}$1${normal}
+function yellow() {
+  echo -e ${yellow}$1${normal}
 }
 
-function cyan () {
+function cyan() {
   echo -e ${cyan}$1${normal}
-}
-
-DEFAULT_LD_LIBRARY_PATH=""
-LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-$DEFAULT_LD_LIBRARY_PATH}
-
-# ------------------------------------------------------------------- #
-#                                 MUNGERS                             #
-# ------------------------------------------------------------------- #
-
-# if directory doesn't exist in a PATH environmental variable, create it.
-
-path_munge () {
-  if ! echo "$PATH" | /bin/grep -Eq "(^|:)$1($|:)" ; then
-	yellow "$1 ${normal} doesn't exist. ${cyan}Adding to PATH."
-    PATH="$1:$PATH"
-  fi
-}
-
-ld_library_path_munge () {
-  if ! echo "$LD_LIBRARY_PATH" | /bin/grep -Eq "(^|:)$1($|:)" ; then
-	yellow "$1 ${normal} doesn't exist. ${cyan}Adding to LD_LIBRARY_PATH."
-    LD_LIBRARY_PATH="$1:$LD_LIBRARY_PATH"
-  fi
 }
 
 # ------------------------------------------------------------------- #
@@ -60,34 +45,19 @@ ld_library_path_munge () {
 # Adds visual padding for visibility
 # usage - output_spacing "command" "info"
 tmp_padding="                                    " # expand as necessary...
-function output_spacing () {
-	tmp_stringToPad=$1
-	printf "%s%s %s %s\n" "${yellow}$1" "${tmp_padding:${#tmp_stringToPad}}" ":" "${normal}$2"
+function output_spacing() {
+  tmp_stringToPad=$1
+  printf "%s%s %s %s\n" "${yellow}$1" "${tmp_padding:${#tmp_stringToPad}}" ":" "${normal}$2"
 }
 
 # outputs received script arguments
 # SYNTAX - output_received_args "$@"
 function output_received_args () {
-
   echo -n "$bg_black""$yellow"  # set bg/text colors
-  printf "[cmd] : %s" "${SHELL##*/}"
   args=("$@")           # store arguments in a special array
   ELEMENTS=${#args[@]}  # get number of elements
 
-  case $SHELL in
-    */zsh)
-    START=1
-    END=$ELEMENTS+1
-    ;;
-    *)
-    START=0
-    END=$ELEMENTS
-    ;;
-  esac
-
-  for (( v=$START;v<$END;v++)); do
-    printf ' %s' "${args[${v}]}"
-  done
+  printf "[cmd] : ${args}"
 
   echo -n "$bg_normal""$normal" # reset bg/text colors
   printf "\n\n"
@@ -109,128 +79,156 @@ function display_env_var_arrays() {
 
 	for i in "${arr[@]}"; do
 		case $SHELL in
-		*/zsh) # shell-check doesn't support zsh and will mark as error
-		output_spacing "${i}" "${(P)i}"
-		;;
-		*/bash) # ${!i} is incompatible on zsh (indirect expansion)
-		output_spacing "${i}" "${!i}"
-		;;
-		*)
-		echo "no compatible shells"
+      */zsh) # shell-check doesn't support zsh and will mark as error
+      output_spacing "${i}" "${(P)i}"
+      ;;
+      */bash) # ${!i} is incompatible on zsh (indirect expansion)
+      output_spacing "${i}" "${!i}"
+      ;;
+      *)
+      echo "no compatible shells"
 		esac
 
 	done
 }
 
 make_dir() {
-    if [[ ! -d $1 ]]; then
+  if [[ ! -d $1 ]]; then
     echo "creating dir: $1"
-        mkdir -p $1
-    fi
+    mkdir -p $1
+  fi
 }
-{%- endraw %}
+{% endraw %}
+function setup_env() {
+  green "═══ {{ cookiecutter.project_slug }} env.sh ═══"
 
-green "═══ start {{ cookiecutter.project_slug }} env.sh ═══"
-output_received_args "$@"
-
-# ------------------------------------------------------------------- #
-#                                  ARGS                               #
-# ------------------------------------------------------------------- #
-{{ cookiecutter.project_acronym.upper() }}_DIR="$(pwd)"
-
-# ------------------------------------------------------------------- #
-#                             BASE Env.Vars                           #
-# ------------------------------------------------------------------- #
-
-if [[ ! -d "${{ cookiecutter.project_acronym.upper() }}_DIR" ]]; then
-        red "Error: {{ cookiecutter.project_acronym.upper() }}_DIR:${{ cookiecutter.project_acronym.upper() }}_DIR doesn't point to a valid directory";
-        return 1;
-fi
-
-chmod u+x -R "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_DIR}/scripts"
-
-{{ cookiecutter.project_acronym.upper() }}_DATA_DIR="${{ cookiecutter.project_acronym.upper() }}_DIR/data"
-{{ cookiecutter.project_acronym.upper() }}_EXPERIMENTS_DIR="${{ cookiecutter.project_acronym.upper() }}_DIR/experiments"
-{{ cookiecutter.project_acronym.upper() }}_LOG_DIR="${{ cookiecutter.project_acronym.upper() }}_DIR/logs"
-{{ cookiecutter.project_acronym.upper() }}_LOG_CFG="${{ cookiecutter.project_acronym.upper() }}_DIR/default-logging.json"
-
-make_dir ${{ cookiecutter.project_acronym.upper() }}_DATA_DIR
-make_dir ${{ cookiecutter.project_acronym.upper() }}_EXPERIMENTS_DIR
-make_dir ${{ cookiecutter.project_acronym.upper() }}_LOG_DIR
-
-cyan "\n[Generated Base Env.Vars]"
-arrayEnvVarsToExport=(  {{ cookiecutter.project_acronym.upper() }}_DIR
-                        {{ cookiecutter.project_acronym.upper() }}_DATA_DIR
-                        {{ cookiecutter.project_acronym.upper() }}_EXPERIMENTS_DIR
-                        {{ cookiecutter.project_acronym.upper() }}_LOG_DIR
-                        {{ cookiecutter.project_acronym.upper() }}_LOG_CFG)
-
-export_env_var_arrays "${arrayEnvVarsToExport[@]}"
-display_env_var_arrays "${arrayEnvVarsToExport[@]}"
-
-# ------------------------------------------------------------------- #
-#                                 PYTHON                              #
-# ------------------------------------------------------------------- #
-green "\n--- Python Env.Vars ---"
+  USER_VENV=${1:-""}
+  DEFAULT_VENV=".env"
 
 
-if [[ "$OSTYPE" == "msys" ]]; then
-  NKK_PYTHON_EXECUTABLE=$(which python)
-else
-  {{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE=$(which python3)
-fi
 
-DEFAULT_VENV=".env"
+  # ------------------------------------------------------------------- #
+  #                                  ARGS                               #
+  # ------------------------------------------------------------------- #
+  {{ cookiecutter.project_acronym.upper() }}_DIR="$(pwd)"
 
-# use default venv if first arg is empty
-arg1=${1:-""}
-VAR=$1
-{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV="${VAR:=${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_DIR}/${DEFAULT_VENV}}"
+  # ------------------------------------------------------------------- #
+  #                             BASE Env.Vars                           #
+  # ------------------------------------------------------------------- #
 
-if [[ "$OSTYPE" == "msys" ]]; then
-  {{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV_PATH="${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"/Scripts/activate
-else
-  {{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV_PATH="${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"/bin/activate
-fi
+  if [[ ! -d "${{ cookiecutter.project_acronym.upper() }}_DIR" ]]; then
+    red "Error: {{ cookiecutter.project_acronym.upper() }}_DIR:${{ cookiecutter.project_acronym.upper() }}_DIR doesn't point to a valid directory"
+    return 1
+  fi
 
-# check if venv dir exists, if not create one after confirming with user
-if [[ ! -d ${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV} ]]; then
+  arrayEnvVarsToExport=({{ cookiecutter.project_acronym.upper() }}_DIR)
+
+  export_env_var_arrays "${arrayEnvVarsToExport[@]}"
+  display_env_var_arrays "${arrayEnvVarsToExport[@]}"
+  chmod u+x -R "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_DIR}/scripts"
+
+  # ------------------------------------------------------------------- #
+  #                                 PYTHON                              #
+  # ------------------------------------------------------------------- #
+  green "\n--- Python Env.Vars ---"
+
+  if [[ "$OSTYPE" == "msys" ]]; then
+    {{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE=$(which python)
+  else
+    {{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE=$(which python3)
+  fi
+
+  {{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV="${USER_VENV:=${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_DIR}/${DEFAULT_VENV}}"
+
+  if [[ "$OSTYPE" == "msys" ]]; then
+    {{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV_PATH="${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"/Scripts/activate
+  else
+    {{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV_PATH="${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"/bin/activate
+  fi
+
+  # check if venv dir exists, if not create one after confirming with user
+  if [[ ! -d ${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV} ]]; then
     red "virtual env does not exist at ${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"
     case $SHELL in
     */zsh)
-        vared -p "Would you like me to create one? [y/n]: " -c confirm
-    ;;
+      vared -p "Would you like me to create one? [y/n]: " -c confirm
+      ;;
     */bash) # vared incompatible on bash
-        echo "Would you like me to create one? [y/n]: "; read confirm
-    ;;
+      echo "Would you like me to create one? [y/n]: "
+      read confirm
+      ;;
     *)
-    echo "no compatible shells"
+      echo "no compatible shells"
+      ;;
     esac
-  if [[ "$confirm" == "y" ]]; then
-    yellow "creating venv ${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"
-    "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE}" -m venv "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"
+    if [[ "$confirm" == "y" ]]; then
+      yellow "creating venv ${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"
+      "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE}" -m venv "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"
+    fi
   fi
-fi
 
-source ${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV_PATH}
+  source ${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV_PATH}
 
-# get python executable from venv
-{{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE=$(which python)
-{{ cookiecutter.project_acronym.upper() }}_PYTHON_VERSION=$(${{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+  # get python executable from venv
+  {{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE=$(which python)
+  {{ cookiecutter.project_acronym.upper() }}_PYTHON_VERSION=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
 
-arrayEnvVarsToExport=(  {{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV
-                        {{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV_PATH
-                        {{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE
-                        {{ cookiecutter.project_acronym.upper() }}_PYTHON_VERSION)
+  arrayEnvVarsToExport=({{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV
+    {{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV_PATH
+    {{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE
+    {{ cookiecutter.project_acronym.upper() }}_PYTHON_VERSION)
 
-export_env_var_arrays "${arrayEnvVarsToExport[@]}"
-display_env_var_arrays "${arrayEnvVarsToExport[@]}"
+  export_env_var_arrays "${arrayEnvVarsToExport[@]}"
+  display_env_var_arrays "${arrayEnvVarsToExport[@]}"
 
-green "\n--- Final Env.Vars ---"
-cyan "(All env. vars. generated from this script related to {{ cookiecutter.project_acronym.upper() }})"
-${{ cookiecutter.project_acronym.upper() }}_DIR/scripts/log-env-variables.sh
+  green "\n--- Final Env.Vars ---"
+  cyan "(All env. vars. generated from this script related to {{ cookiecutter.project_acronym.upper() }})"
+  ${{ cookiecutter.project_acronym.upper() }}_DIR/scripts/log-env-variables.sh
 
-green "═══ end {{ cookiecutter.project_slug }} env.sh ═══"
+  green "═══ {{ cookiecutter.project_slug }} env.sh ═══"
+}
 
-# To avoid propagating the unbound and pipefail to the current terminal.
-set +uo pipefail
+function FNC_help() {
+  # usage - help_outputs "command" "info"
+  tmp_padding="          "
+  function help_outputs() {
+    tmp_stringToPad=$1
+{%- raw  %}
+    printf "%s%s %s %s\n" "${yellow}$1" "${tmp_padding:${#tmp_stringToPad}}" ":" "${normal}$2"
+{%- endraw  %}
+  }
+
+  green "\n________________________ PURPOSE ________________________"
+  echo "$ABOUT_SCRIPT"
+
+  green "\n________________________ USAGE INFO ________________________"
+
+  instruction=("SYNTAX" "${normal}source scripts/env.sh ${yellow}[venv-name]")
+{%- raw  %}
+  printf "%s%s %s\n" "${green}${instruction[0]}" "${tmp_padding:${#instruction[0]}}" "${instruction[1]}"
+{%- endraw  %}
+
+  help_outputs "-h" "Print this message"
+  help_outputs "venv-name" "Activates the python virtual environment ${cyan}venv-env${normal}"
+  help_outputs "" "Additionally, if ${cyan}venv-env${normal} does not exist, it will prompt the user and create one."
+  help_outputs "" "This is an OPTIONAL argument. If no ${cyan}venv-env${normal} is provided,"
+  help_outputs "" "it will create and/or activate the default venv (.env)"
+  printf "\n"
+}
+
+output_received_args "$0" "$@"
+
+# shifting over all --${OPTARG}s
+# shift $((OPTIND - 1))
+DEFAULT_SCRIPT_ARGUMENT=""
+SCRIPT_ARGUMENT=${1:-${DEFAULT_SCRIPT_ARGUMENT}}
+
+case "${SCRIPT_ARGUMENT}" in
+-h | -help | --help | --h)
+  FNC_help
+  ;;
+*)
+  setup_env $SCRIPT_ARGUMENT
+  ;;
+esac
+

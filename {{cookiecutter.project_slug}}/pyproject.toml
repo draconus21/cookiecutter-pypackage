@@ -22,9 +22,9 @@ dependencies = [
 {%- if cookiecutter.command_line_interface|lower == "click" -%}
 "click"{%- endif -%}
 {%- if cookiecutter.with_utils == "y" -%}
-, "matplotlib", "opencv-contrib-python", "opencv-python", "numpy"{%- endif -%}
+, "matplotlib", "opencv-contrib-python", "opencv-python", "numpy", "seaborn"{%- endif -%}
 ]
-requires-python = ">=3.7"
+requires-python = ">=3.10+"
 dynamic = ["readme"]
 classifiers=[
         "Development Status :: 2 - Pre-Alpha",
@@ -33,8 +33,7 @@ classifiers=[
         "{{ license_classifiers[cookiecutter.open_source_license] }}",
 {%- endif %}
         "Natural Language :: English",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.10",
     ]
 
 [project.optional-dependencies]
@@ -68,13 +67,17 @@ readme = { file = ["README.rst", "CONTRIBUTING.rst", "HISTORY.rst"] }
 
 [tool.pytest]
 collect_ignore = ["setup.py"]
+
+[tool.pytest.ini_options]
+  addopts  ="--capture=sys --basetemp=testdata_tmp --junitxml=testreports/report.xml"
+  testpaths=["benchmark", "."]
 {%- endif %}
 {%- if cookiecutter.use_black == "y" %}
 
 [tool.black]
-line-length = 120
-ignore = "E501"
-extend-exclude = '''
+  line-length = 120
+  ignore = "E501"
+  extend-exclude = '''
 (
   /(
       \.eggs         # exclude a few common directories in the
