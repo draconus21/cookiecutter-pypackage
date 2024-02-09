@@ -137,7 +137,6 @@ function FNC_help() {
     help_outputs "More info" "https://sinclert.github.io/packaging/"
 
     printf "\n"
-
 }
 
 SCRIPT_ARG=${1:-""}

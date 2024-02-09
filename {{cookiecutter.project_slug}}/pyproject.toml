@@ -65,6 +65,9 @@ changelog = "https://gitlab.com/{{ cookiecutter.gitlab_username }}/{{ cookiecutt
 readme = { file = ["README.rst", "CONTRIBUTING.rst", "HISTORY.rst"] }
 {%- if cookiecutter.use_pytest == 'y' %}
 
+[tool.setuptools.packages.find]
+  include=["{{ cookiecutter.project_slug }}"]
+
 [tool.pytest]
 collect_ignore = ["setup.py"]
 
