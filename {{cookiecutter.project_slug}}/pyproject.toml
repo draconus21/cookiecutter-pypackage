@@ -24,7 +24,7 @@ dependencies = [
 {%- if cookiecutter.with_utils == "y" -%}
 , "matplotlib", "opencv-contrib-python", "opencv-python", "numpy", "seaborn"{%- endif -%}
 ]
-requires-python = ">=3.10+"
+requires-python = ">=3.10"
 dynamic = ["readme"]
 classifiers=[
         "Development Status :: 2 - Pre-Alpha",
