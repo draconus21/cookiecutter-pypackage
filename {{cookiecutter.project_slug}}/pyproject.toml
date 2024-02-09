@@ -75,9 +75,9 @@ collect_ignore = ["setup.py"]
 {%- if cookiecutter.use_black == "y" %}
 
 [tool.black]
-line-length = 120
-ignore = "E501"
-extend-exclude = '''
+  line-length = 120
+  ignore = "E501"
+  extend-exclude = '''
 (
   /(
       \.eggs         # exclude a few common directories in the

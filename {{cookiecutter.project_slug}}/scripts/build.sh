@@ -1,4 +1,6 @@
+{% raw  -%}
 #! /bin/bash
+{%- endraw %}
 
 # ------------------------------------------------------------------- #
 #                              ABOUT                                  #
@@ -53,7 +55,7 @@ function rmdir() {
     fi
 }
 
-f [[ -z "${{{ cookiecutter.project_acronym.upper() }}_DIR}" ]]; then
+if [[ -z "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_DIR}" ]]; then
     {{ cookiecutter.project_acronym.upper() }}_DIR=$(pwd)
     error "{{ cookiecutter.project_acronym.upper() }}_DIR is empty. Please run ${yellow}source ./scripts/env.sh${red} from the repo's root directory."
 fi
@@ -64,17 +66,17 @@ set -uo pipefail
 
 function clean_whl() {
     cyan "[clean-whl] start"
-    rmdir "${{{ cookiecutter.project_acronym.upper() }}_DIR}/dist"
-    rmdir "${{{ cookiecutter.project_acronym.upper() }}_DIR}/build"
+    rmdir "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_DIR}/dist"
+    rmdir "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_DIR}/build"
     cyan "[clean-whl] done"
 }
 
 function clean_env() {
     cyan "[clean-env] start"
-    if [[ -n "${{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}" ]]; then
-        if [[ -d "${{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}" ]]; then
-            cyan "removing your virtual env folder: ${{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"
-            rmdir "${{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"/
+    if [[ -n "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}" ]]; then
+        if [[ -d "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}" ]]; then
+            cyan "removing your virtual env folder: ${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"
+            rmdir "${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}"/
         fi
     fi
     cyan "[clean-env] done"
@@ -83,7 +85,7 @@ function clean_env() {
 
 function build_whl() {
     cyan "[build-whl] start"
-    python -m build ${{{ cookiecutter.project_acronym.upper() }}_DIR}
+    python -m build ${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_DIR}
     cyan "[build-whl] done"
 }
 
@@ -103,7 +105,9 @@ function FNC_help() {
     tmp_padding="                                "
     function help_outputs() {
         tmp_stringToPad=$1
+{%- raw  %}
         printf "%s%s %s %s\n" "${yellow}$1" "${tmp_padding:${#tmp_stringToPad}}" ":" "${normal}$2"
+{%- endraw %}
     }
 
     green "\n________________________ PURPOSE ________________________"
@@ -112,7 +116,9 @@ function FNC_help() {
     green "\n________________________USAGE INFO________________________"
 
     instruction=("SYNTAX" "${normal}build.sh ${cyan}<options set A>")
+{%- raw  %}
     printf "%s%s %s\n" "${green}${instruction[0]}" "${tmp_padding:${#instruction[0]}}" "${instruction[1]}"
+{%- endraw %}
 
     cyan "\n[options set A]"
     help_outputs "-h" "Print this message"
@@ -121,7 +127,7 @@ function FNC_help() {
     help_outputs "wheel" "builds {{ cookiecutter.project_slug }} whl"
     help_outputs "" "generates dist/{{ cookiecutter.project_slug }}-....whl (build distribution) and dist/{{ cookiecutter.project_slug }}....tar.gz (source distribution)"
     help_outputs "clean-env" "cleans up the virtual Python environment"
-    help_outputs "" "[${{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}]"
+    help_outputs "" "[${{ '{' }}{{ cookiecutter.project_acronym.upper() }}_PYTHON_VENV}]"
     help_outputs "clean-whl" "cleans up folders created during ./scripts/build.sh wheel"
     help_outputs "clean" "runs clean-whl and clean-env"
 
