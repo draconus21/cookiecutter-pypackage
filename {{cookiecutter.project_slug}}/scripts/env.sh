@@ -156,7 +156,7 @@ green "\n--- Python Env.Vars ---"
 
 
 if [[ "$OSTYPE" == "msys" ]]; then
-  NKK_PYTHON_EXECUTABLE=$(which python)
+  {{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE=$(which python)
 else
   {{ cookiecutter.project_acronym.upper() }}_PYTHON_EXECUTABLE=$(which python3)
 fi
