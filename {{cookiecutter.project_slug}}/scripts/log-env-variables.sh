@@ -6,38 +6,39 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 cyan=$(tput setaf 6)
 
-function green () {
+function green() {
   echo -e ${green}$1${normal}
 }
 
-function red () {
+function red() {
   echo -e ${red}$1${normal}
 }
 
-function yellow () {
+function yellow() {
   echo -e ${yellow}$1${normal}
 }
 
-function cyan () {
+function cyan() {
   echo -e ${cyan}$1${normal}
 }
-
-
 
 DEFAULT_LD_LIBRARY_PATH=""
 LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-$DEFAULT_LD_LIBRARY_PATH}
 
-numbersOfEnvVarsFound=$(env | grep -c '^{{ cookiecutter.project_acronym }}_')
-yellow "[{{ cookiecutter.project_acronym }} env vars] ${cyan}# = ${normal}$numbersOfEnvVarsFound"
-env | grep '^{{ cookiecutter.project_acronym }}_' | GREP_COLOR='1;34' grep --color=always -P '^[^=]+' | sort
+numbersOfEnvVarsFound=$(env | grep -c '^{{ cookiecutter.project_acronym.upper() }}_')
+yellow "[{{ cookiecutter.project_acronym.upper() }} env vars] ${cyan}# = ${normal}$numbersOfEnvVarsFound"
+env | grep '^{{ cookiecutter.project_acronym.upper() }}_' | GREP_COLOR='1;34' grep --color=always -P '^[^=]+' | sort
 
-numbersOfPathsFound=$(sed 's/:/\n/g' <<< "$PATH" | grep -c -E "$OpenCV_DIR")
+numbersOfPathsFound=$(sed 's/:/\n/g' <<<"$PATH" | grep -c -E "$OpenCV_DIR")
 yellow "[PATH] ${cyan}# = ${normal}$numbersOfPathsFound"
-sed 's/:/\n/g' <<< $PATH | grep -E "$OpenCV_DIR"
-
+sed 's/:/\n/g' <<<$PATH | grep -E "$OpenCV_DIR"
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-  numbersOfLDLibraryPathsFound=$(sed 's/:/\n/g' <<< "$LD_LIBRARY_PATH" | grep -c -E "$OpenCV_DIR")
-  yellow "[LD_LIBRARY_PATH] ${cyan}# = ${normal}$numbersOfLDLibraryPathsFound"
-  sed 's/:/\n/g' <<< $LD_LIBRARY_PATH | grep -E "$OpenCV_DIR"
+  if [[ -z $LD_LIBRARY_PATH ]]; then
+    # do  nothing
+  else
+    numbersOfLDLibraryPathsFound=$(sed 's/:/\n/g' <<<"$LD_LIBRARY_PATH" | grep -c -E "$OpenCV_DIR")
+    yellow "[LD_LIBRARY_PATH] ${cyan}# = ${normal}$numbersOfLDLibraryPathsFound"
+    sed 's/:/\n/g' <<<$LD_LIBRARY_PATH | grep -E "$OpenCV_DIR"
+  fi
 fi
