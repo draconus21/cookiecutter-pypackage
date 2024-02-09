@@ -4,7 +4,7 @@
 
 # -o prevent errors from being masked
 # -u require vars to be declared before referencing them
-set -o pipefail
+set -ou pipefail
 
 normal=$(tput sgr0)
 bg_normal=$(tput setab sgr0)
@@ -30,28 +30,9 @@ function cyan () {
   echo -e ${cyan}$1${normal}
 }
 
-DEFAULT_LD_LIBRARY_PATH=""
-LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-$DEFAULT_LD_LIBRARY_PATH}
-
 # ------------------------------------------------------------------- #
 #                                 MUNGERS                             #
 # ------------------------------------------------------------------- #
-
-# if directory doesn't exist in a PATH environmental variable, create it.
-
-path_munge () {
-  if ! echo "$PATH" | /bin/grep -Eq "(^|:)$1($|:)" ; then
-	yellow "$1 ${normal} doesn't exist. ${cyan}Adding to PATH."
-    PATH="$1:$PATH"
-  fi
-}
-
-ld_library_path_munge () {
-  if ! echo "$LD_LIBRARY_PATH" | /bin/grep -Eq "(^|:)$1($|:)" ; then
-	yellow "$1 ${normal} doesn't exist. ${cyan}Adding to LD_LIBRARY_PATH."
-    LD_LIBRARY_PATH="$1:$LD_LIBRARY_PATH"
-  fi
-}
 
 # ------------------------------------------------------------------- #
 #                            HELPER FUNCTIONS                         #
